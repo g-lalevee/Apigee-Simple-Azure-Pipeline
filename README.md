@@ -1,3 +1,3 @@
-# Apigee-Simple-Azure-Pipeline
+# Apigee Demo Repo
 
-Github repository to be used in Azure Pipeline !
+Deploy an Apigeee proxy using Maven.

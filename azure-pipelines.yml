@@ -1,19 +1,175 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Maven
+
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- main
+- master
+- releases/*
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  APIGEE_USER_ENV: $(APIGEE_USER)
+  APIGEE_ORGANIZATION: "emea-demo7"
+  APIGEE_ENVIRONMENT: "test"
+  APIGEE_DEPLOYMENT_SUFFIX: ""
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  MAVEN_PROFILE: "test"
+
+  AUTHOR_EMAIL: "laleveee@google.com"
+  COMMIT_ID: $(Build.SourceVersion)
+  COMMIT_BRANCH: $(Build.SourceBranch)
+
+  TEST_HOST: "emea-demo7-test.apigee.net"
+  TEST_BASE_PATH: "/airports-cicd/v1"
+
+
+
+steps:
+    
+# install node.js tools and dependencies
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  enabled: "false"
+    
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: './tools_dependencies'
+  displayName: npmInstalls
+  enabled: "true"
+
+# run Apigeelint, API proxy linter
+# generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
+- bash: |
+    echo "run Apigeelint"
+    #mv /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/lib/package/plugins/po027-hmacPolicy.js /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/lib/package/plugins/PO027-hmacPolicy.js
+    /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/cli.js  -s apiproxy/ -e PO027 -f junit.js > apigeelint-output.xml 
+  enabled: "true"
+  displayName: runApigeeLint
+
+
+# publish Apigeelint JUnit result
+- task: PublishTestResults@2
+  displayName: publishApigeelintResults
+  enabled: "true"
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/*-output.xml'
+ 
+
+# generate OTP for Apigee MFA login
+# store generated OTP and Apigee password (retrieved from pipeline secret variable) into inter-step variables
+- bash: |
+    #npm install -g
+    echo "##vso[task.setvariable variable=MFACODE]$(node ./tools_dependencies/mfatoken.js)"
+    echo "##vso[task.setvariable variable=APIGEE_PASS;issecret=false]$APIGEE_PASS"
+  displayName: generateMfaToken
+  enabled: "true"
+  env:
+    # retrievee Apigee user MFA shared secret from pipeline variables
+    SHARED_SECRET: $(SHARED_SECRET)
+    APIGEE_PASS: $(APIGEE_PASSWORD)
+
+
+# Maven Deploy Apigee Configuration
+- task: Maven@3
+  displayName: mvnApigeeConfiguration
+  enabled: "true"
+  inputs:
+    mavenPomFile: 'EdgeConfig/pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    goals: "install -X -P$(MAVEN_PROFILE) -Dapigee.org=$(APIGEE_ORGANIZATION) -Dauthtype=oauth -Dmfatoken=$(MFACODE) -Dapigee.username=$(APIGEE_USER) -Ddeployment.suffix=$(APIGEE_DEPLOYMENT_SUFFIX) -Dapigee.config.options=update -Dapigee.config.dir=EdgeConfig/resources/edge"
+  env:
+    APIGEE_PASS: $(APIGEE_PASS)
+
+
+# Maven Config Env.
+- task: Maven@3
+  displayName: mvnProcessResources
+  enabled: "true"
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    goals: "process-resources -P$(MAVEN_PROFILE) -Dcommit=$(COMMIT_ID) -Dbranch=$(COMMIT_BRANCH) -Dauthor=$(AUTHOR_EMAIL) -Ddeployment.suffix=$(APIGEE_DEPLOYMENT_SUFFIX) "
+
+
+# Maven Package proxy bundle
+- task: Maven@3
+  displayName: mvnApigeeConfigure
+  enabled: "true"
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    goals: "apigee-enterprise:configure -P$(MAVEN_PROFILE) -Ddeployment.suffix=$(APIGEE_DEPLOYMENT_SUFFIX) "
+
+
+# generate OTP for Apigee MFA login
+# store generated OTP and Apigee password (retrieved from pipeline secret variable) into inter-step variables
+- bash: |
+    #npm install -g
+    echo "##vso[task.setvariable variable=MFACODE]$(node ./tools_dependencies/mfatoken.js)"
+    echo "##vso[task.setvariable variable=APIGEE_PASS;issecret=false]$APIGEE_PASS"
+  displayName: generateMfaToken
+  enabled: "true"
+  env:
+    # retrievee Apigee user MFA shared secret from pipeline variables
+    SHARED_SECRET: $(SHARED_SECRET)
+    APIGEE_PASS: $(APIGEE_PASSWORD)
+
+
+# Maven Deploy proxy bundle
+- task: Maven@3
+  displayName: mvnApigeeDeploy
+  enabled: "true"
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    goals: "apigee-enterprise:deploy -P$(MAVEN_PROFILE) -Dapigee.org=$(APIGEE_ORGANIZATION) -Dauthtype=oauth -Dmfatoken=$(MFACODE) -Dapigee.username=$(APIGEE_USER) -Ddeployment.suffix=$(APIGEE_DEPLOYMENT_SUFFIX) "
+  env:
+    APIGEE_PASS: $(APIGEE_PASS)
+
+# run Apickli, API test integration
+# generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
+- bash: |
+    echo "run Apickli"
+    echo "----------------------------"
+    cd test/integration 
+    npm install 
+    sed -i "s/organization_hostname/$TEST_HOST/g" ./features/support/init.js
+    cat ./features/support/init.js
+    npm test
+    #cat report.json 
+    echo "----------------------------"
+    cat report.json | node_modules/cucumber-junit/bin/cucumber-junit  > apickli-output.xml 
+    #cat apickli-output.xml 
+  displayName: runApickli
+  enabled: "true"
+
+  # publish Apigeelint JUnit result
+- task: PublishTestResults@2
+  displayName: publishApickliResults
+  enabled: "true"
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/*-output.xml'
