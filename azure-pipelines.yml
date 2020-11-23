@@ -19,13 +19,11 @@ variables:
 
   MAVEN_PROFILE: "test"
 
-  AUTHOR_EMAIL: "laleveee@google.com"
+  AUTHOR_EMAIL: $(APIGEE_USER)
   COMMIT_ID: $(Build.SourceVersion)
   COMMIT_BRANCH: $(Build.SourceBranch)
 
-  TEST_HOST: "emea-demo7-test.apigee.net"
-  TEST_BASE_PATH: "/airports-cicd/v1"
-
+  TEST_HOST: "$(APIGEE_ORGANIZATION)-$(APIGEE_ENVIRONMENT).apigee.net"
 
 
 steps:
@@ -47,7 +45,6 @@ steps:
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
 - bash: |
     echo "run Apigeelint"
-    #mv /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/lib/package/plugins/po027-hmacPolicy.js /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/lib/package/plugins/PO027-hmacPolicy.js
     /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/cli.js  -s apiproxy/ -e PO027 -f junit.js > apigeelint-output.xml 
   enabled: "true"
   displayName: runApigeeLint
@@ -159,10 +156,8 @@ steps:
     sed -i "s/organization_hostname/$TEST_HOST/g" ./features/support/init.js
     cat ./features/support/init.js
     npm test
-    #cat report.json 
     echo "----------------------------"
     cat report.json | node_modules/cucumber-junit/bin/cucumber-junit  > apickli-output.xml 
-    #cat apickli-output.xml 
   displayName: runApickli
   enabled: "true"
 
