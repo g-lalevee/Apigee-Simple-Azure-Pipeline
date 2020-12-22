@@ -49,7 +49,6 @@ steps:
   enabled: "true"
   displayName: runApigeeLint
 
-
 # publish Apigeelint JUnit result
 - task: PublishTestResults@2
   displayName: publishApigeelintResults
@@ -58,6 +57,9 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
  
+- publish: $(System.DefaultWorkingDirectory)/bin/WebApp
+  enabled: "true"
+  artifact: apigeelint-output.xml
 
 # generate OTP for Apigee MFA login
 # store generated OTP and Apigee password (retrieved from pipeline secret variable) into inter-step variables
