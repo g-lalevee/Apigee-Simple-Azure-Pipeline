@@ -45,7 +45,7 @@ steps:
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
 - bash: |
     echo "run Apigeelint"
-    /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/cli.js  -s apiproxy/ -e PO027 -f junit.js > apigeelint-output.xml 
+    /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/cli.js  -s apiproxy/ -e PO027 -f html.js > ./apigeelint-out.html 
   enabled: "true"
   displayName: runApigeeLint
 
@@ -57,9 +57,9 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
  
-- publish: $(System.DefaultWorkingDirectory)
+- publish: $(System.DefaultWorkingDirectory)/apigeelint-out.html
   enabled: "true"
-  artifact: apigeelint-output.xml
+  artifact: apigeelint-out.html
 
 # generate OTP for Apigee MFA login
 # store generated OTP and Apigee password (retrieved from pipeline secret variable) into inter-step variables
