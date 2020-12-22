@@ -57,7 +57,7 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
  
-- publish: $(System.DefaultWorkingDirectory)/bin/WebApp
+- publish: $(System.DefaultWorkingDirectory)
   enabled: "true"
   artifact: apigeelint-output.xml
 
