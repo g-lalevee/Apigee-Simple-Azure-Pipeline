@@ -50,12 +50,12 @@ steps:
   displayName: runApigeeLint
 
 # publish Apigeelint JUnit result
-- task: PublishTestResults@2
-  displayName: publishApigeelintResults
-  enabled: "true"
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/*-output.xml'
+# - task: PublishTestResults@2
+#   displayName: publishApigeelintResults
+#   enabled: "true"
+#   inputs:
+#     testResultsFormat: 'JUnit'
+#    testResultsFiles: '**/*-output.xml'
  
 - publish: $(System.DefaultWorkingDirectory)/apigeelint-out.html
   enabled: "true"
