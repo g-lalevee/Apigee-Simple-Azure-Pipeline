@@ -87,7 +87,7 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: './pom.xml'
