@@ -90,10 +90,10 @@ steps:
     echo $(GCP_SERVICE_ACCCOUNT) > sa.json
   enabled: "true"
   displayName: Generate SA Key file 
-env:  
-  GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
+  env:  
+    GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
 
-  - task: Maven@3
+- task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
   enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
