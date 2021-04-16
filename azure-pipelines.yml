@@ -25,7 +25,6 @@ variables:
 
   TEST_HOST: "$(APIGEE_ORGANIZATION)-$(APIGEE_ENVIRONMENT).apigee.net"
 
-
 steps:
     
 # install node.js tools and dependencies
