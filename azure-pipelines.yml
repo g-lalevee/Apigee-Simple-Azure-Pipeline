@@ -58,12 +58,17 @@ steps:
   enabled: "false"
   displayName: runApigeeLint
 
-
 - publish: $(System.DefaultWorkingDirectory)/apigeelint-out.html
   enabled: "false"
   artifact: apigeelint-out.html
 
-# Maven Deploy Apigee Configuration
+# Configure EdgeeConfig/edge.json file: update target environment name
+- bash: |
+    sed -i "s/target_apigee_env/$(APIGEE_ENV)/g" ./EdgeConfig/edge.json
+  enabled: "true"
+  displayName: Update edge.json
+
+# Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee edge
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
   enabled: "true"
@@ -75,11 +80,11 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "install -Papigeeapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dapigee.username=$(APIGEE_CREDS_USR) -Dapigee.password=$(APIGEE_CREDS_PSW) -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
+    goals: "install -Papigeeapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dapigee.username=$(APIGEE_CREDS_USR) -Dapigee.password=$(APIGEE_CREDS_PSW) -Dapigee.config.file=EdgeConfig/edge.json -Dapigee.config.options=update"
   env:  
       APIGEE_PASS: $(APIGEE_PASS)
         
-# Maven Deploy Apigee Configuration
+# Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
   enabled: "false"
