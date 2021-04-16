@@ -85,7 +85,15 @@ steps:
       APIGEE_PASS: $(APIGEE_PASS)
         
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
-- task: Maven@3
+# Configure EdgeeConfig/edge.json file: update target environment name
+- bash: |
+    echo $(GCP_SERVICE_ACCCOUNT) > sa.json
+  enabled: "true"
+  displayName: Generate SA Key file 
+env:  
+  GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
+
+  - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
   enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
@@ -96,9 +104,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "install -Pgoogleapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=$(GCP_SERVICE_ACCCOUNT) -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
-  env:  
-    GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
+    goals: "install -Pgoogleapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
 
 # Maven Config Env.
 - task: Maven@3
