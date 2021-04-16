@@ -67,8 +67,8 @@ steps:
 # Maven Deploy Apigee Configuration
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
-  enabled: "false"
-  condition:  eq( ${{ variables.API_VERSION }}, "apigeeapi")
+  enabled: "true"
+  condition:  eq( $(API_VERSION), "apigeeapi")
  
   inputs:
     mavenPomFile: 'EdgeConfig/pom.xml'
