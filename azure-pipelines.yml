@@ -28,7 +28,7 @@ variables:
   COMMIT_ID: $(Build.SourceVersion)
   COMMIT_BRANCH: $(Build.SourceBranch)
 
-  TEST_HOST: "$(APIGEE_ORGANIZATION)-$(APIGEE_ENVIRONMENT).apigee.net"
+  TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
   #TEST_HOST: x-demo7.lalevee.org
 
   # GCP_SERVICE_ACCCOUNT, APIGEE_CREDS_USR & APIGEE_CREDS_PSW are stored in GitLab CI/CD variable settings
@@ -68,7 +68,8 @@ steps:
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
   enabled: "false"
-  condition:  eq($(API_VERSION), "apigeeapi")
+  condition:  eq( ${{ variables.API_VERSION }}, "apigeeapi")
+ 
   inputs:
     mavenPomFile: 'EdgeConfig/pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -136,7 +137,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:deploy -P$(MAVEN_PROFILE) -Dapigee.org=$(APIGEE_ORGANIZATION) -Dauthtype=oauth -Dmfatoken=$(MFACODE) -Dapigee.username=$(APIGEE_USER) -Ddeployment.suffix=$(APIGEE_DEPLOYMENT_SUFFIX) "
+    goals: "apigee-enterprise:deploy -P$(MAVEN_PROFILE) -Dapigee.org=$(APIGEE_ORG) -Dauthtype=oauth -Dmfatoken=$(MFACODE) -Dapigee.username=$(APIGEE_USER) -Ddeployment.suffix=$(APIGEE_DEPLOYMENT_SUFFIX) "
   env:
     APIGEE_PASS: $(APIGEE_PASS)
 
