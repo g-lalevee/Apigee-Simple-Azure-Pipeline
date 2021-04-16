@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright 2020 Google LLC
+Copyright 2021 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,8 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>apigee-devrel</groupId>
@@ -32,6 +31,7 @@ limitations under the License.
 			<layout>default</layout>
 		</pluginRepository>
 	</pluginRepositories>
+	
 	<repositories>
 		<repository>
 			<id>central</id>
@@ -51,54 +51,240 @@ limitations under the License.
 		<project.root.dir>${basedir}</project.root.dir>
 		<target.root.dir>${basedir}/target</target.root.dir>
 		<deployment.suffix></deployment.suffix>
-		<!-- <apigee.hosturl>${env.APIGEE_HOSTURL}</apigee.hosturl> -->
-		<apigee.hosturl>https://api.enterprise.apigee.com</apigee.hosturl>
-
+		<apigee.options>override</apigee.options>
 		<apigee.apiversion>v1</apigee.apiversion>
-		<apigee.org>${env.APIGEE_ORG}</apigee.org>
-		<apigee.username>${env.APIGEE_USER}</apigee.username>
-		<apigee.password>${env.APIGEE_PASS}</apigee.password>
-		
-		<apigee.authtype>oauth</apigee.authtype>
-		<apigee.mfatoken>${mfatoken}</apigee.mfatoken>
+		<apigee.org>${org}</apigee.org>
+		<apigee.env>${env}</apigee.env>
+		<deployment.description>n/a</deployment.description>
 	</properties>
 
-
-
-	<!-- This is where you add the environment specific properties under various profile names -->
-	<!-- For apigee.options, refer to "Advanced Configuration Options" under https://github.com/apigee/apigee-deploy-maven-plugin#pom-xml-sample -->
 	<profiles>
 		<profile>
-			<id>test</id>
+			<!-- Current Generation SaaS -->
+			<id>apigeeapi</id>
 			<properties>
-				<apigee.env>test</apigee.env>
-				<apigee.options>update</apigee.options>
+				<apigee.plugin.version>1.2.2</apigee.plugin.version>
+				<apigee.hosturl>https://api.enterprise.apigee.com</apigee.hosturl>
+				<apigee.authtype>oauth</apigee.authtype>
+				<apigee.username>${username}</apigee.username>
+				<apigee.password>${password}</apigee.password>
 			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.apigee.edge.config</groupId>
+						<artifactId>apigee-config-maven-plugin</artifactId>
+						<version>1.4.3</version>
+						<executions>
+							<execution>
+								<id>create-config-cache</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>caches</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-kvm</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>keyvaluemaps</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-resourcefiles</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>resourcefiles</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-keystores</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>keystores</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-aliases</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>aliases</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-references</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>references</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-targetserver</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>targetservers</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-apiproduct</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>apiproducts</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-developer</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>developers</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-app</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>apps</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-reports</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>reports</goal>
+								</goals>
+							</execution>
+							<execution> 
+								<id>create-config-flowhooks</id>
+								<phase>install</phase>
+								<goals>
+									<goal>flowhooks</goal>
+								</goals>
+							</execution>
+							<execution> 
+								<id>create-config-userroles</id>
+								<phase>install</phase>
+								<goals>
+									<goal>userroles</goal>
+								</goals>
+							</execution>
+							<execution> 
+								<id>import-keys</id>
+								<phase>install</phase>
+								<goals>
+									<goal>importKeys</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>            
+				</plugins>
+			</build>
+	
 		</profile>
+
+
+
 		<profile>
-			<id>prod</id>
+			<!-- Next Generation SaaS and hybrid -->
+			<id>googleapi</id>
 			<properties>
-				<apigee.env>prod</apigee.env>
-				<apigee.options>override</apigee.options>
-				<apigee.override.delay>5</apigee.override.delay>
+				<apigee.plugin.version>2.1.0</apigee.plugin.version>
+				<apigee.hosturl>https://apigee.googleapis.com</apigee.hosturl>
+				<apigee.bearer>${token}</apigee.bearer> <!-- this takes precedence over service account file -->
+				<apigee.serviceaccount.file>${sa}</apigee.serviceaccount.file>
 			</properties>
+			<build>
+				<plugins>
+					<!-- APIGEE CONFIG -->
+					<!-- apigee deploy config 2.1.0 -->
+					<plugin>
+						<groupId>com.apigee.edge.config</groupId>
+						<artifactId>apigee-config-maven-plugin</artifactId>
+						<version>2.1.0</version>
+						<executions>
+							<execution>
+								<id>create-config-references</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>references</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-targetserver</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>targetservers</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-kvm</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>keyvaluemaps</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-resourcefiles</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>resourcefiles</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-apiproduct</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>apiproducts</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-developer</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>developers</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-app</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>apps</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>create-config-reports</id>
+								<phase>install</phase>                        
+								<goals>
+									<goal>reports</goal>
+								</goals>
+							</execution>
+							<execution> 
+								<id>create-config-flowhooks</id>
+								<phase>install</phase>
+								<goals>
+									<goal>flowhooks</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin> 
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 
-	<build>
 
+	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>io.apigee.build-tools.enterprise4g</groupId>
 					<artifactId>apigee-edge-maven-plugin</artifactId>
-					<version>1.1.7</version>
+					<version>${apigee.plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 
 		<plugins>
-
+			<!-- APIGEE DEPLOY -->
 			<!-- copy the full apiproxy folder to target folder -->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -145,11 +331,9 @@ limitations under the License.
 					<basedir>${target.root.dir}</basedir>
 					<includes>
 						<include>test/integration/support/init.js</include>
-						<include>apiproxy/cicd-v1.xml</include>
+						<include>apiproxy/airports-cicd-v1.xml</include>
 						<include>apiproxy/proxies/default.xml</include>
 					</includes>
-					<!-- don't treat token/value as regular expressions -->
-                    <regex>false</regex>
 					<replacements>
 						<replacement>
 							<token>org-env.apigee.net</token>
@@ -161,7 +345,7 @@ limitations under the License.
 						</replacement>
 						<replacement>
 							<token>@description</token>
-							<value>Commit: ${commit}, Branch: ${branch}, Author: ${author}</value>
+							<value>${deployment.description}</value>
 						</replacement>
 					</replacements>
 				</configuration>
@@ -170,7 +354,7 @@ limitations under the License.
 			<plugin>
 				<groupId>io.apigee.build-tools.enterprise4g</groupId>
 				<artifactId>apigee-edge-maven-plugin</artifactId>
-				<version>1.1.7</version>
+				<version>${apigee.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>configure-bundle-step</id>
@@ -182,7 +366,7 @@ limitations under the License.
 					<!--deploy bundle -->
 					<execution>
 						<id>deploy-bundle-step</id>
-						<phase>install</phase>
+						<phase>deploy</phase>
 						<goals>
 							<goal>deploy</goal>
 						</goals>
@@ -194,7 +378,6 @@ limitations under the License.
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.5</version>
-
 				<executions>
 					<execution>
 						<id>auto-clean-init</id>
@@ -203,17 +386,8 @@ limitations under the License.
 							<goal>clean</goal>
 						</goals>
 					</execution>
-					<execution>
-						<id>auto-clean-install</id>
-						<phase>install</phase>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
-
 </project>
