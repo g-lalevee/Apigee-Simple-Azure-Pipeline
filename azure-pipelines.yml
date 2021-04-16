@@ -68,16 +68,15 @@ steps:
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
   enabled: "true"
-  condition:  eq( variables.API_VERSION, 'apigeeapi')
- 
+  condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
-    mavenPomFile: 'EdgeConfig/pom.xml'
+    mavenPomFile: './pom.xml'
     mavenOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "install -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dapigee.username=$(APIGEE_CREDS_USR) -Dapigee.password=$(APIGEE_CREDS_PSW) -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
+    goals: "install -Papigeeapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dapigee.username=$(APIGEE_CREDS_USR) -Dapigee.password=$(APIGEE_CREDS_PSW) -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
   env:  
       APIGEE_PASS: $(APIGEE_PASS)
         
@@ -85,9 +84,9 @@ steps:
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
   enabled: "false"
-  condition:  eq(variables.API_VERSION, "googleapi")
+  condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
-    mavenPomFile: 'EdgeConfig/pom.xml'
+    mavenPomFile: './pom.xml'
     mavenOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
