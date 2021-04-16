@@ -98,7 +98,7 @@ steps:
     publishJUnitResults: true
     goals: "install -Pgoogleapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=$(GCP_SERVICE_ACCCOUNT) -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
   env:  
-      APIGEE_PASS: $(APIGEE_PASS)
+    GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
 
 # Maven Config Env.
 - task: Maven@3
