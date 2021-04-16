@@ -1,5 +1,4 @@
-# Apigee: Simple Azure Pipeline
-
+# Apigee: Simple Azure Pipeline: work in progress
 ## Goal
 
 Simple implementation of a CI/CD pipeline for Apigee using
