@@ -68,7 +68,7 @@ steps:
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
   enabled: "true"
-  condition:  eq( $(API_VERSION), "apigeeapi")
+  condition:  eq( variables.API_VERSION, "apigeeapi")
  
   inputs:
     mavenPomFile: 'EdgeConfig/pom.xml'
