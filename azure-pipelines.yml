@@ -15,7 +15,7 @@ variables:
 
   #API_VERSION: "googleapi" 
   # or 
-  API_VERSION: "apigeeapi"
+  API_VERSION: "googleapi"
 
   APIGEE_USER_ENV: $(APIGEE_USER)
   APIGEE_ENV: "default-dev"
