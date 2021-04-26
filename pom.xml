@@ -178,9 +178,7 @@ limitations under the License.
 					</plugin>            
 				</plugins>
 			</build>
-	
 		</profile>
-
 
 
 		<profile>
