@@ -31,9 +31,8 @@ variables:
   TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
   #TEST_HOST: x-demo7.lalevee.org
 
-  # GCP_SERVICE_ACCCOUNT, APIGEE_CREDS_USR & APIGEE_CREDS_PSW are stored in GitLab CI/CD variable settings
-  # GCP_SERVICE_ACCCOUNT variable, type "File" 
-
+  # GCP_SERVICE_ACCCOUNT, APIGEE_CREDS_USR & APIGEE_CREDS_PSW are stored in Azure Pipeline variable settings
+  
 
 steps:
     
@@ -68,6 +67,17 @@ steps:
   enabled: "true"
   displayName: Update edge.json
 
+# Generate GCP Service Account file from Azure Pipeline variable GCP_SERVICE_ACCCOUNT
+# if deploy to Apigee X/hybrid
+- bash: |
+    echo '$(GCP_SERVICE_ACCCOUNT)' > sa.json
+  enabled: "true"
+  condition:  eq(variables.API_VERSION, 'googleapi')
+  displayName: Generate SA Key file 
+  env:  
+    GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
+
+
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee edge
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
@@ -85,15 +95,6 @@ steps:
       APIGEE_PASS: $(APIGEE_PASS)
         
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
-# Configure EdgeeConfig/edge.json file: update target environment name
-- bash: |
-    echo '$(GCP_SERVICE_ACCCOUNT)' > sa.json
-    cat sa.json
-  enabled: "true"
-  displayName: Generate SA Key file 
-  env:  
-    GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
-
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
   enabled: "true"
@@ -110,7 +111,7 @@ steps:
 # Maven Config Env.
 - task: Maven@3
   displayName: mvnProcessResources
-  enabled: "false"
+  enabled: "true"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -124,7 +125,7 @@ steps:
 # Maven Package proxy bundle
 - task: Maven@3
   displayName: mvnApigeeConfigure
-  enabled: "false"
+  enabled: "true"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -135,11 +136,11 @@ steps:
     goals: "apigee-enterprise:configure -P$(MAVEN_PROFILE) -Ddeployment.suffix=$(APIGEE_DEPLOYMENT_SUFFIX) "
 
 
-
-# Maven Deploy proxy bundle
+# Maven Deploy proxy bundle: Apigee Edge
 - task: Maven@3
   displayName: mvnApigeeDeploy
-  enabled: "false"
+  enabled: "true"
+  condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -147,10 +148,24 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:deploy -P$(MAVEN_PROFILE) -Dapigee.org=$(APIGEE_ORG) -Dauthtype=oauth -Dmfatoken=$(MFACODE) -Dapigee.username=$(APIGEE_USER) -Ddeployment.suffix=$(APIGEE_DEPLOYMENT_SUFFIX) "
+    goals: "apigee-enterprise:deploy -Papigeeapi -Dorg=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dpassword=$(APIGEE_CREDS_PSW) -Dusername=$(APIGEE_CREDS_USR) -Ddeployment.suffix=$(APIGEE_BUILD_DEPLOYMENT_SUFFIX)" 
   env:
     APIGEE_PASS: $(APIGEE_PASS)
 
+# Maven Deploy proxy bundle: Apigee X/hybrid
+- task: Maven@3
+  displayName: mvnApigeeDeploy
+  enabled: "true"
+  condition:  eq(variables.API_VERSION, 'googleapi')
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.8'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    goals: "apigee-enterprise:deploy -Pgoogleapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json  -Ddeployment.suffix=$(APIGEE_BUILD_DEPLOYMENT_SUFFIX)" 
+    
 # run Apickli, API test integration
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
 - bash: |
