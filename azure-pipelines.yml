@@ -87,8 +87,8 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
 # Configure EdgeeConfig/edge.json file: update target environment name
 - bash: |
-    echo $(GCP_SERVICE_ACCCOUNT) 
-#> sa.json
+    echo '$(GCP_SERVICE_ACCCOUNT)' > sa.json
+    cat sa.json
   enabled: "true"
   displayName: Generate SA Key file 
   env:  
