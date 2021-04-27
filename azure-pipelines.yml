@@ -58,6 +58,20 @@ steps:
   enabled: "true"
   artifact: apigeelint-out.html
 
+
+# run Apigeelint, API proxy linter
+- bash: |
+    echo "run Eslint"
+    /home/vsts/work/1/s/tools_dependencies/node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > ./eslint-out.html
+  enabled: "true"
+  displayName: runESlint
+
+- publish: $(System.DefaultWorkingDirectory)/eslint-out.html
+  enabled: "true"
+  artifact: eslint-out.html
+ 
+
+
 # Configure EdgeeConfig/edge.json file: update target environment name
 - bash: |
     sed -i "s/target_apigee_env/$(APIGEE_ENV)/g" ./EdgeConfig/edge.json
