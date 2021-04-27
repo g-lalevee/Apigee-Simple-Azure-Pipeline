@@ -50,26 +50,29 @@ steps:
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
 - bash: |
     echo "run Apigeelint"
-    /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/cli.js  -s apiproxy/ -e PO027 -f html.js > ./apigeelint-out.html 
-  enabled: "true"
+    /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/cli.js  -s apiproxy/ -e PO027 -f junit.js > apigeelint-output.xml   enabled: "true"
   displayName: runApigeeLint
 
-- publish: $(System.DefaultWorkingDirectory)/apigeelint-out.html
+- task: PublishTestResults@2
+  displayName: publishApigeelintResults
   enabled: "true"
-  artifact: apigeelint-out.html
-
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/*-output.xml'
 
 # run Apigeelint, API proxy linter
 - bash: |
     echo "run Eslint"
-    /home/vsts/work/1/s/tools_dependencies/node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > ./eslint-out.html
+    /home/vsts/work/1/s/tools_dependencies/node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format junit ./apiproxy/resources/jsc > ./eslint-out.xml
   enabled: "true"
   displayName: runESlint
 
-- publish: $(System.DefaultWorkingDirectory)/eslint-out.html
+- task: PublishTestResults@2
+  displayName: publishESlintResults
   enabled: "true"
-  artifact: eslint-out.html
- 
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/*-output.xml'
 
 
 # Configure EdgeeConfig/edge.json file: update target environment name

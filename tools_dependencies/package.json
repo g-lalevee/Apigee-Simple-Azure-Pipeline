@@ -1,7 +1,7 @@
 {
-  "name": "mfatoken",
+  "name": "tooling",
   "version": "1.0.0",
-  "description": "Generate MFA code for Apigee",
+  "description": "Apigee Pipeline Tools",
   "main": "mfatoken.js",
   "dependencies": {
     "totp-generator": "^0.0.8",
