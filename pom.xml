@@ -335,16 +335,17 @@ limitations under the License.
 					<replacements>
 						<replacement>
 							<token>org-env.apigee.net</token>
-							<value>${apigee.org}-${apigee.env}.apigee.net</value>
+							<value>${TEST_HOST}</value>
 						</replacement>
-						<replacement>
+<!-- 						<replacement>
 							<token>/airports-cicd/v1</token>
 							<value>/airports-cicd${deployment.suffix}/v1</value>
 						</replacement>
 						<replacement>
 							<token>@description</token>
 							<value>${deployment.description}</value>
-						</replacement>
+						</replacement> 
+-->
 					</replacements>
 				</configuration>
 			</plugin>

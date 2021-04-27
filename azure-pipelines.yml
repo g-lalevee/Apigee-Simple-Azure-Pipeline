@@ -21,14 +21,12 @@ variables:
   APIGEE_ENV: "default-dev"
   APIGEE_ORG: "bap-emea-apigee-5"
 
-  MAVEN_PROFILE: "test"
-
   AUTHOR_EMAIL: $(APIGEE_USER)
   COMMIT_ID: $(Build.SourceVersion)
   COMMIT_BRANCH: $(Build.SourceBranch)
 
-  TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
-  #TEST_HOST: x-demo7.lalevee.org
+  #TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
+  TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
 
   # GCP_SERVICE_ACCCOUNT, APIGEE_CREDS_USR & APIGEE_CREDS_PSW are stored in Azure Pipeline variable settings
   
@@ -89,7 +87,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "install -Papigeeapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dapigee.username=$(APIGEE_CREDS_USR) -Dapigee.password=$(APIGEE_CREDS_PSW) -Dapigee.config.file=EdgeConfig/edge.json -Dapigee.config.options=update"
+    goals: "install -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dapigee.username=$(APIGEE_CREDS_USR) -Dapigee.password=$(APIGEE_CREDS_PSW) -Dapigee.config.file=EdgeConfig/edge.json -Dapigee.config.options=update"
   env:  
       APIGEE_PASS: $(APIGEE_PASS)
         
@@ -105,7 +103,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "install -Pgoogleapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
+    goals: "install -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
 
 # Maven Config Env.
 - task: Maven@3
@@ -147,7 +145,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:deploy -Papigeeapi -Dorg=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dpassword=$(APIGEE_CREDS_PSW) -Dusername=$(APIGEE_CREDS_USR)" 
+    goals: "apigee-enterprise:deploy -P$(API_VERSION) -Dorg=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dpassword=$(APIGEE_CREDS_PSW) -Dusername=$(APIGEE_CREDS_USR)" 
   env:
     APIGEE_PASS: $(APIGEE_PASS)
 
@@ -163,7 +161,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:deploy -Pgoogleapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json" 
+    goals: "apigee-enterprise:deploy -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json" 
     
 # run Apickli, API test integration
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
@@ -178,12 +176,12 @@ steps:
     echo "----------------------------"
     cat report.json | node_modules/cucumber-junit/bin/cucumber-junit  > apickli-output.xml 
   displayName: runApickli
-  enabled: "false"
+  enabled: "true"
 
   # publish Apigeelint JUnit result
 - task: PublishTestResults@2
   displayName: publishApickliResults
-  enabled: "false"
+  enabled: "true"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
