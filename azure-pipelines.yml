@@ -20,7 +20,6 @@ variables:
   APIGEE_USER_ENV: $(APIGEE_USER)
   APIGEE_ENV: "default-dev"
   APIGEE_ORG: "bap-emea-apigee-5"
-  APIGEE_DEPLOYMENT_SUFFIX: ""
 
   MAVEN_PROFILE: "test"
 
@@ -119,7 +118,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "process-resources -Pgoogleapi -Dcommit=$GIT_COMMIT -Dbranch=$GIT_BRANCH -Dauthor=$AUTHOR_EMAIL -e"
+    goals: "process-resources -P$(API_VERSION) -Dcommit=$(GIT_COMMIT) -Dbranch=$(GIT_BRANCH) -Dauthor=$(AUTHOR_EMAIL) -e"
 
 
 # Maven Package proxy bundle
@@ -133,7 +132,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:configure -P$API_VERSION -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV  -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX" 
+    goals: "apigee-enterprise:configure -P$(API_VERSION) -Dorg=$(APIGEE_ORG) -Denv=$(APIGEE_ENV)" 
 
 
 # Maven Deploy proxy bundle: Apigee Edge
@@ -148,7 +147,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:deploy -Papigeeapi -Dorg=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dpassword=$(APIGEE_CREDS_PSW) -Dusername=$(APIGEE_CREDS_USR) -Ddeployment.suffix=$(APIGEE_BUILD_DEPLOYMENT_SUFFIX)" 
+    goals: "apigee-enterprise:deploy -Papigeeapi -Dorg=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dpassword=$(APIGEE_CREDS_PSW) -Dusername=$(APIGEE_CREDS_USR)" 
   env:
     APIGEE_PASS: $(APIGEE_PASS)
 
