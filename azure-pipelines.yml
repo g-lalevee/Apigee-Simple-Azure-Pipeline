@@ -133,7 +133,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:configure -P$API_VERSION -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV  -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX" 
+    goals: "apigee-enterprise:configure -Pgoogleapi -Dorg=$APIGEE_ORG -Denv=$APIGEE_ENV  -Ddeployment.suffix=$APIGEE_DEPLOYMENT_SUFFIX" 
 
 
 # Maven Deploy proxy bundle: Apigee Edge
