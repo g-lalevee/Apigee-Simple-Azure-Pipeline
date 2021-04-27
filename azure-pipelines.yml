@@ -37,7 +37,7 @@ steps:
 - task: NodeTool@0
   inputs:
     versionSpec: '12.x'
-  enabled: "false"
+  enabled: "true"
     
 - task: Npm@1
   inputs:
@@ -51,11 +51,11 @@ steps:
 - bash: |
     echo "run Apigeelint"
     /home/vsts/work/1/s/tools_dependencies/node_modules/apigeelint/cli.js  -s apiproxy/ -e PO027 -f html.js > ./apigeelint-out.html 
-  enabled: "false"
+  enabled: "true"
   displayName: runApigeeLint
 
 - publish: $(System.DefaultWorkingDirectory)/apigeelint-out.html
-  enabled: "false"
+  enabled: "true"
   artifact: apigeelint-out.html
 
 # Configure EdgeeConfig/edge.json file: update target environment name
