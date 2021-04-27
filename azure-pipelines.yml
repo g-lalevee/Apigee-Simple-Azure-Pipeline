@@ -137,7 +137,7 @@ steps:
 
 # Maven Deploy proxy bundle: Apigee Edge
 - task: Maven@3
-  displayName: mvnApigeeDeploy
+  displayName: mvnApigeeDeployApigee
   enabled: "true"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
@@ -153,7 +153,7 @@ steps:
 
 # Maven Deploy proxy bundle: Apigee X/hybrid
 - task: Maven@3
-  displayName: mvnApigeeDeploy
+  displayName: mvnApigeeDeployGoogle
   enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
@@ -163,7 +163,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:deploy -Pgoogleapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json  -Ddeployment.suffix=$(APIGEE_BUILD_DEPLOYMENT_SUFFIX)" 
+    goals: "apigee-enterprise:deploy -Pgoogleapi -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json" 
     
 # run Apickli, API test integration
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
@@ -172,7 +172,7 @@ steps:
     echo "----------------------------"
     cd test/integration 
     npm install 
-    sed -i "s/organization_hostname/$TEST_HOST/g" ./features/support/init.js
+    sed -i "s/organization_hostname/$(TEST_HOST)/g" ./features/support/init.js
     cat ./features/support/init.js
     npm test
     echo "----------------------------"
