@@ -6,6 +6,8 @@
   "dependencies": {
     "totp-generator": "^0.0.8",
     "apigeelint": "^2.0.0",
+    "eslint": "^6",
+    "eslint-config-google": "^0",
     "JSONPath": "^0",
     "is-my-json-valid": "^2",
     "path": "^0",
