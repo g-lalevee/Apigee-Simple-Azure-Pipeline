@@ -51,7 +51,9 @@ steps:
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
 - bash: |
     echo "run Apigeelint" 
-    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO027 -f junit.js > apigeelint-output.xml
+    ls ./node_modules/apigeelint
+    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO027 -f junit.js 
+  # > apigeelint-output.xml
   enabled: "true"
   displayName: runApigeeLint
 
