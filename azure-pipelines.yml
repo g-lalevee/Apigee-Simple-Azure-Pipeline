@@ -67,7 +67,7 @@ steps:
 # run ESlint, javascript linter
 - bash: |
     echo "run Eslint"
-    ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > > test_output/eslint-out.html
+    ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > test_output/eslint-out.html
     cat eslint-out.xml
   enabled: "true"
   displayName: runESlint
