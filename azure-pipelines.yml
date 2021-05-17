@@ -71,7 +71,7 @@ steps:
 
 - task: PublishTestResults@2
   displayName: publishESlintResults
-  enabled: "true"
+  enabled: "false"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
@@ -87,7 +87,7 @@ steps:
 # if deploy to Apigee X/hybrid
 - bash: |
     echo '$(GCP_SERVICE_ACCCOUNT)' > sa.json
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'googleapi')
   displayName: Generate SA Key file 
   env:  
@@ -97,7 +97,7 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee edge
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: './pom.xml'
@@ -113,7 +113,7 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: './pom.xml'
@@ -127,7 +127,7 @@ steps:
 # Maven Config Env.
 - task: Maven@3
   displayName: mvnProcessResources
-  enabled: "true"
+  enabled: "false"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -141,7 +141,7 @@ steps:
 # Maven Package proxy bundle
 - task: Maven@3
   displayName: mvnApigeeConfigure
-  enabled: "true"
+  enabled: "false"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -155,7 +155,7 @@ steps:
 # Maven Deploy proxy bundle: Apigee Edge
 - task: Maven@3
   displayName: mvnApigeeDeployApigee
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: 'pom.xml'
@@ -171,7 +171,7 @@ steps:
 # Maven Deploy proxy bundle: Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeDeployGoogle
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: 'pom.xml'
@@ -195,12 +195,12 @@ steps:
     echo "----------------------------"
     cat report.json | node_modules/cucumber-junit/bin/cucumber-junit  > apickli-output.xml 
   displayName: runApickli
-  enabled: "true"
+  enabled: "false"
 
   # publish Apigeelint JUnit result
 - task: PublishTestResults@2
   displayName: publishApickliResults
-  enabled: "true"
+  enabled: "false"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
