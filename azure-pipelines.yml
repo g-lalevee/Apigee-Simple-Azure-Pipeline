@@ -55,15 +55,16 @@ steps:
 
 - task: PublishTestResults@2
   displayName: publishApigeelintResults
-  enabled: "true"
+  enabled: "false"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
 
-# run Apigeelint, API proxy linter
+# run ESlint, javascript linter
 - bash: |
     echo "run Eslint"
-    /home/vsts/work/1/s/tools_dependencies/node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format junit ./apiproxy/resources/jsc > ./eslint-out.xml
+    /home/vsts/work/1/s/tools_dependencies/node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format junit ./apiproxy/resources/jsc 
+  # > ./eslint-out.xml
   enabled: "true"
   displayName: runESlint
 
@@ -78,7 +79,7 @@ steps:
 # Configure EdgeeConfig/edge.json file: update target environment name
 - bash: |
     sed -i "s/target_apigee_env/$(APIGEE_ENV)/g" ./EdgeConfig/edge.json
-  enabled: "true"
+  enabled: "false"
   displayName: Update edge.json
 
 # Generate GCP Service Account file from Azure Pipeline variable GCP_SERVICE_ACCCOUNT
