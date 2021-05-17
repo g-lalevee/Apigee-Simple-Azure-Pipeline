@@ -59,7 +59,7 @@ steps:
 
 - task: PublishTestResults@2
   displayName: publishApigeelintResults
-  enabled: "false"
+  enabled: "true"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
@@ -73,7 +73,7 @@ steps:
 
 - task: PublishTestResults@2
   displayName: publishESlintResults
-  enabled: "false"
+  enabled: "true"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
