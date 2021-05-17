@@ -53,7 +53,7 @@ steps:
     echo "run Apigeelint" 
     mkdir test_output
     ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f junit.js > test_output/apigeelint-output.xml
-    cat apigeelint-output.xml
+    cat test_output/apigeelint-output.xml
   enabled: "true"
   displayName: runApigeeLint
 
