@@ -59,12 +59,14 @@ steps:
 
 - task: PublishTestResults@2
   displayName: publishApigeelintResults
-  enabled: "true"
+  enabled: "false"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.html'
 
 - task: PublishBuildArtifacts@1
+  displayName: publishApigeelintResults2
+  enabled: "true"
   inputs:
     pathToPublish: test_output
     artifactName: apigeelint
