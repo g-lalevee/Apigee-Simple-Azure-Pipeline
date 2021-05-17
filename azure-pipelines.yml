@@ -52,8 +52,8 @@ steps:
 - bash: |
     echo "run Apigeelint" 
     ls ./node_modules/apigeelint
-    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f junit.js 
-  # > apigeelint-output.xml
+    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f junit.js > apigeelint-output.xml
+    cat apigeelint-output.xml
   enabled: "true"
   displayName: runApigeeLint
 
@@ -67,7 +67,8 @@ steps:
 # run ESlint, javascript linter
 - bash: |
     echo "run Eslint"
-    ./node_modules/eslint/bin/eslint.js -c .eslintrc-jsc.yml --format junit apiproxy/resources/jsc > ./eslint-out.xml
+    ./node_modules/eslint/bin/eslint.js -c .eslintrc-jsc.yml --format junit apiproxy/resources/jsc > eslint-out.xml
+    cat eslint-out.xml
   enabled: "true"
   displayName: runESlint
 
