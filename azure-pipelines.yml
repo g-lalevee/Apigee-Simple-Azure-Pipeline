@@ -52,7 +52,7 @@ steps:
 - bash: |
     echo "run Apigeelint" 
     mkdir test_output
-    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f  html.js  > test_output/apigeelint-output.html
+    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f html.js  > test_output/apigeelint-output.html
     cat test_output/apigeelint-output.html
   enabled: "true"
   displayName: runApigeeLint
@@ -62,30 +62,29 @@ steps:
   enabled: "false"
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: '**/*-output.html'
-
-- task: PublishBuildArtifacts@1
-  displayName: publishApigeelintResults2
-  enabled: "true"
-  inputs:
-    pathToPublish: test_output
-    artifactName: apigeelint
+    testResultsFiles: '**/*-output.xml'
 
 # run ESlint, javascript linter
 - bash: |
     echo "run Eslint"
-    ./node_modules/eslint/bin/eslint.js -c .eslintrc-jsc.yml --format junit apiproxy/resources/jsc > eslint-out.xml
+    ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > > test_output/eslint-out.html
     cat eslint-out.xml
   enabled: "true"
   displayName: runESlint
 
 - task: PublishTestResults@2
   displayName: publishESlintResults
-  enabled: "true"
+  enabled: "false"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
 
+- task: PublishBuildArtifacts@1
+  displayName: publishStaticCodeTestsResults
+  enabled: "true"
+  inputs:
+    pathToPublish: test_output
+    artifactName: static-code-analysis
 
 # Configure EdgeeConfig/edge.json file: update target environment name
 - bash: |
