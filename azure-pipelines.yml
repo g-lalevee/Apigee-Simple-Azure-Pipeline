@@ -52,8 +52,8 @@ steps:
 - bash: |
     echo "run Apigeelint" 
     mkdir test_output
-    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f junit.js > test_output/apigeelint-output.xml
-    cat test_output/apigeelint-output.xml
+    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f  html.js  > test_output/apigeelint-output.html
+    cat test_output/apigeelint-output.html
   enabled: "true"
   displayName: runApigeeLint
 
@@ -62,7 +62,7 @@ steps:
   enabled: "true"
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: '**/*-output.xml'
+    testResultsFiles: '**/*-output.html'
 
 - task: PublishBuildArtifacts@1
   inputs:
