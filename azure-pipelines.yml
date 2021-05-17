@@ -86,6 +86,8 @@ steps:
     pathToPublish: test_output
     artifactName: static-code-analysis
 
+
+
 # Configure EdgeeConfig/edge.json file: update target environment name
 - bash: |
     sed -i "s/target_apigee_env/$(APIGEE_ENV)/g" ./EdgeConfig/edge.json
@@ -96,7 +98,7 @@ steps:
 # if deploy to Apigee X/hybrid
 - bash: |
     echo '$(GCP_SERVICE_ACCCOUNT)' > sa.json
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   displayName: Generate SA Key file 
   env:  
@@ -106,7 +108,7 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee edge
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: './pom.xml'
@@ -122,7 +124,7 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: './pom.xml'
@@ -136,7 +138,7 @@ steps:
 # Maven Config Env.
 - task: Maven@3
   displayName: mvnProcessResources
-  enabled: "false"
+  enabled: "true"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -150,7 +152,7 @@ steps:
 # Maven Package proxy bundle
 - task: Maven@3
   displayName: mvnApigeeConfigure
-  enabled: "false"
+  enabled: "true"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -164,7 +166,7 @@ steps:
 # Maven Deploy proxy bundle: Apigee Edge
 - task: Maven@3
   displayName: mvnApigeeDeployApigee
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: 'pom.xml'
@@ -180,7 +182,7 @@ steps:
 # Maven Deploy proxy bundle: Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeDeployGoogle
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: 'pom.xml'
