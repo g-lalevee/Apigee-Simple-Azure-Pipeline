@@ -194,24 +194,30 @@ steps:
     goals: "apigee-enterprise:deploy -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json" 
     
 # run Apickli, API test integration
-# generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
 - bash: |
     echo "run Apickli"
-    echo "----------------------------"
-    cd test/integration 
-    npm install 
-    sed -i "s/organization_hostname/$(TEST_HOST)/g" ./features/support/init.js
-    cat ./features/support/init.js
-    npm test
-    echo "----------------------------"
-    cat report.json | node_modules/cucumber-junit/bin/cucumber-junit  > apickli-output.xml 
+    mkdir integration_output
+    sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
+    node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
+    node ./test/integration/index.js
+    cp ./cucumber_report.html integration_output/apickli_report.html 
+  # cat report.json | node_modules/cucumber-junit/bin/cucumber-junit  > apickli-output.xml 
   displayName: runApickli
-  enabled: "false"
+  enabled: "true"
 
-  # publish Apigeelint JUnit result
+- task: PublishBuildArtifacts@1
+  displayName: publishInteegrationTestsResults
+  enabled: "true"
+  inputs:
+    pathToPublish: integration_output
+    artifactName: integration-tests
+
+  # publish Apigeelint JUnit result (option)
 - task: PublishTestResults@2
   displayName: publishApickliResults
   enabled: "false"
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '**/*-output.xml'
+
+
