@@ -1,8 +1,7 @@
 'use strict';
 
 const request = require('request');
-//const jsonPath = require('JSONPath');
-const jsonPath = require('jsonpath-plus');
+const jsonPath = require('jsonpath');
 const select = require('xpath.js');
 const Dom = require('xmldom').DOMParser;
 const fs = require('fs');
