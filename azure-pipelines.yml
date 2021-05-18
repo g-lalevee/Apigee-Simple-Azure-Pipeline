@@ -197,7 +197,7 @@ steps:
 - bash: |
     echo "run Apickli"
     mkdir integration_output
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+    export NODE_TLS_REJECT_UNAUTHORIZED = "0";
     sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
     echo "run cucumber"
     node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:report.json
