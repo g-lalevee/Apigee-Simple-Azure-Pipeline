@@ -26,7 +26,7 @@ variables:
   COMMIT_BRANCH: $(Build.SourceBranch)
 
   #TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
-  TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
+  TEST_HOST: 34.117.38.184.nip.io
 
   # GCP_SERVICE_ACCCOUNT, APIGEE_CREDS_USR & APIGEE_CREDS_PSW are stored in Azure Pipeline variable settings
   
