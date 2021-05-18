@@ -198,8 +198,11 @@ steps:
     echo "run Apickli"
     mkdir integration_output
     sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
-    node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:./report.json
+    echo "run cucumber"
+    node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:report.json
+    echo "run json format"
     node ./test/integration/index.js
+    echo "run copy"
     cp ./cucumber_report.html integration_output/apickli_report.html 
   # cat report.json | node_modules/cucumber-junit/bin/cucumber-junit  > apickli-output.xml 
   displayName: runApickli
