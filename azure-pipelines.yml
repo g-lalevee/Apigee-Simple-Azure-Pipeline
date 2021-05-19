@@ -5,7 +5,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- master
+- main
 - releases/*
 
 pool:
@@ -36,11 +36,11 @@ steps:
 
 # Define Apigee organization and environmnet from Git Branch
 - bash: |
-    if [ $COMMIT_BRANCH == "main" ]; then
+    echo $COMMIT_BRANCH is commited
+    if [ $COMMIT_BRANCH == "prod" ]; then
       # Prod branch --> Apigee prod environment 
       echo "##vso[task.setvariable variable=APIGEE_ORG]$DEFAULT_APIGEE_ORG"
       echo "##vso[task.setvariable variable=APIGEE_ENV]prod"
-
     else
       # all ohers branches --> defualt environment
       echo "##vso[task.setvariable variable=APIGEE_ORG]$DEFAULT_APIGEE_ORG"
@@ -51,20 +51,21 @@ steps:
   env:  
     DEFAULT_APIGEE_ORG: $(c_APIGEE_ORG)
     DEFAULT_APIGEE_ENV: $(DEFAULT_APIGEE_ENV)
+    COMMIT_BRANCH: $(COMMIT_BRANCH)
 
 
 # install node.js tools and dependencies
 - task: NodeTool@0
   inputs:
     versionSpec: '12.x'
-  enabled: "false"
+  enabled: "true"
     
 - task: Npm@1
   inputs:
     command: 'install'
     workingDir: '.'
   displayName: npmInstalls
-  enabled: "false"
+  enabled: "true"
 
 
 # run Apigeelint, API proxy linter
@@ -74,7 +75,7 @@ steps:
     mkdir test_output
     ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f html.js  > test_output/apigeelint-output.html
     cat test_output/apigeelint-output.html
-  enabled: "false"
+  enabled: "true"
   displayName: runApigeeLint
 
 
@@ -83,14 +84,14 @@ steps:
     echo "run Eslint"
     ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > test_output/eslint-out.html
     cat test_output/eslint-out.html
-  enabled: "false"
+  enabled: "true"
   displayName: runESlint
 
 
 # Publish static code analysis folder result
 - task: PublishBuildArtifacts@1
   displayName: publishStaticCodeTestsResults
-  enabled: "false"
+  enabled: "true"
   inputs:
     pathToPublish: test_output
     artifactName: static-code-analysis
@@ -106,7 +107,7 @@ steps:
 # if deploy to Apigee X/hybrid
 - bash: |
     echo '$(GCP_SERVICE_ACCCOUNT)' > sa.json
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   displayName: Generate SA Key file 
   env:  
@@ -117,7 +118,7 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee edge
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: './pom.xml'
@@ -133,7 +134,7 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: './pom.xml'
@@ -147,7 +148,7 @@ steps:
 # Maven Config Env.
 - task: Maven@3
   displayName: mvnProcessResources
-  enabled: "false"
+  enabled: "true"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -161,7 +162,7 @@ steps:
 # Maven Package proxy bundle
 - task: Maven@3
   displayName: mvnApigeeConfigure
-  enabled: "false"
+  enabled: "true"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -175,7 +176,7 @@ steps:
 # Maven Deploy proxy bundle: Apigee Edge
 - task: Maven@3
   displayName: mvnApigeeDeployApigee
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: 'pom.xml'
@@ -191,7 +192,7 @@ steps:
 # Maven Deploy proxy bundle: Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeDeployGoogle
-  enabled: "false"
+  enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: 'pom.xml'
@@ -213,13 +214,13 @@ steps:
     node ./test/integration/index.js
     cp ./cucumber_report.html integration_output/apickli_report.html 
   displayName: runApickli
-  enabled: "false"
+  enabled: "true"
 
 
 # Publish integration test folder result
 - task: PublishBuildArtifacts@1
   displayName: publishInteegrationTestsResults
-  enabled: "false"
+  enabled: "true"
   inputs:
     pathToPublish: integration_output
     artifactName: integration-tests
