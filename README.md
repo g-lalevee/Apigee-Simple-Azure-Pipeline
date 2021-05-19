@@ -141,7 +141,7 @@ Next step will be to add Apigee credentials to your pipeline.
   - Keep this value secret: checked
   - Click the **OK** button
 
-3.  (option) Trigger pipeline execution
+3.  (option) Force triggered pipeline execution
 - Go to **Pipelines** menu, edit the pipeline, then **More options** button and select **Triggers**.
 - In **Continuous Integration** section, check **Override the YAML continuous integration trigger from here** and **Enable continuous integration**
 
@@ -151,30 +151,36 @@ Next step will be to add Apigee credentials to your pipeline.
 
 Using your favorite IDE...
 1.  Update the **azure-pipelines.yml** file<BR>
-In global **Variables** section, change **APIGEE_ORG**, **APIGEE_ENV**, **TEST_HOST** values by your target Apigee organization, environment and Apigee environmnet hostname.<BR>
+In global **Variables** section, change **DEFAULT_APIGEE_ORG**, **DEFAULT_APIGEE_ENV**, **TEST_HOST** values by your target Apigee organization, environment and Apigee environment hostname.<BR>
 Update **API_VERSION** variable to define Apigee target: `googleapi` = Apigee X / Apigee hybrid, `apigeeapi` = Apigee Edge
-2.  Read carefully the **before_script** section to check if the multibranch rules match your Git and Apigee environment naming and configuration.
+2.  Read carefully the **Set Deployment Target** step (bash) to check if the multibranch rules match your Git and Apigee environment naming and configuration.
 3. Save
 4. Commit, Push.. et voila!
 
 
-Use the GitLab UI to monitor your pipeline execution:
+Use the azure DeveOps UI to monitor your pipeline execution and read test reports:
 
-- Go to your GitLab project > CI/CD > Pipeline.
+- Go to **Pipelines** menu, select the pipeline, and select the **Runs** section. <BR> Click on the running build you want to monitor.
 
-![GitLab CICD Pipeline](./img/GitLab-Pipeline-1.png)
+![Running Builds](./images/running-build.png)
 
-- You can see all stages and jobs running.
+- The summary page displays build build summary and status. Click on running **Job**
 
-![GitLab CICD Pipeline Animated](./img/animated-pipeline.gif)
+![Running job](./images/running-job.png)
 
-- And the end of test stages you can download artifacts.
+- You can see all steps running, and their logs
 
-![GitLab CICD Pipeline artifacts](./img/atifacts.png)
+![Running Steps](./images/running-steps.png)
 
-- For example, the results of integration tests with Apickli (download a zip file, open html content with your browser)
+- And the end of the build, you see execution status and link to artifacts generated ("2 published")
 
-![GitLab CICD Pipeline apickli](./img/apickli.png)
+![Job Summary](./images/ended-job.png)
 
+- Click on artifact link, to access artifact folders and list
 
+![Artifact List](./images/artifact-list.png)
+
+- Click on artifact, to download it. Open file with your browser. For example, Apickli report:
+
+![Apicli Report](./images/apickli-report.png)
 
