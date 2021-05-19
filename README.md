@@ -160,7 +160,7 @@ Update **API_VERSION** variable to define Apigee target: `googleapi` = Apigee X 
 4. Commit, Push.. et voila!
 
 
-Use the azure DeveOps UI to monitor your pipeline execution and read test reports:
+Use the Azure DeveOps UI to monitor your pipeline execution and read test reports:
 
 - Go to **Pipelines** menu, select the pipeline, and select the **Runs** section. <BR> Click on the running build you want to monitor.
 

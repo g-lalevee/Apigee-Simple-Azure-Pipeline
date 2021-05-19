@@ -13,15 +13,15 @@ pool:
 
 variables:
 
-  #API_VERSION: "apigeeapi" 
+  API_VERSION: "apigeeapi" 
   # or 
-  API_VERSION: "googleapi"
+  #API_VERSION: "googleapi"
 
-  DEFAULT_APIGEE_ENV: "default-dev"
-  DEFAULT_APIGEE_ORG: "bap-emea-apigee-5"
+  DEFAULT_APIGEE_ENV: "test"
+  DEFAULT_APIGEE_ORG: "emea-demo7"
  
-  TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
-  #TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
+  #TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
+  TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
   #34.117.38.184.nip.io
 
   AUTHOR_EMAIL: $(APIGEE_USER)
@@ -191,7 +191,7 @@ steps:
   env:
     APIGEE_PASS: $(APIGEE_PASS)
 
-    
+
 # Maven Deploy proxy bundle: Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeDeployGoogle
