@@ -103,6 +103,7 @@ steps:
   enabled: "true"
   displayName: Update edge.json
 
+
 # Generate GCP Service Account file from Azure Pipeline variable GCP_SERVICE_ACCCOUNT
 # if deploy to Apigee X/hybrid
 - bash: |
@@ -112,7 +113,6 @@ steps:
   displayName: Generate SA Key file 
   env:  
     GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
-
 
 
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee edge
@@ -131,6 +131,7 @@ steps:
   env:  
       APIGEE_PASS: $(APIGEE_PASS)
         
+
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
@@ -144,6 +145,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     goals: "install -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json -Dapigee.config.file=./EdgeConfig/edge.json -Dapigee.config.options=update"
+
 
 # Maven Config Env.
 - task: Maven@3
@@ -189,6 +191,7 @@ steps:
   env:
     APIGEE_PASS: $(APIGEE_PASS)
 
+    
 # Maven Deploy proxy bundle: Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeDeployGoogle
