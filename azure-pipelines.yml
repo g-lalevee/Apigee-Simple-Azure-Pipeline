@@ -17,13 +17,12 @@ variables:
   # or 
   API_VERSION: "googleapi"
 
-  DEFAULT_APIGEE_ENV: "default-dev"
-  DEFAULT_APIGEE_ORG: "bap-emea-apigee-5"
+  DEFAULT_APIGEE_ENV: "your-dev"
+  DEFAULT_APIGEE_ORG: "your-org"
  
-  TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
-  #34.117.38.184.nip.io
+  TEST_HOST: your-hostname
   #TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
-    
+
   AUTHOR_EMAIL: $(APIGEE_USER)
   COMMIT_ID: $(Build.SourceVersion)
   COMMIT_BRANCH: $(Build.SourceBranch)
