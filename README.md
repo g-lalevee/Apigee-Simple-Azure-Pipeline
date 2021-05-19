@@ -143,7 +143,7 @@ Next step will be to add Apigee credentials to your pipeline.
   - Keep this value secret: checked
   - Click the **OK** button
 
-3.  (option) Force triggered pipeline execution<BR>If you don't want to manage execution trigger from azure-pipelines.yml (see [Azure DevOps Continuous integration (CI) triggers](https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml#ci-triggers)), you can force it using Pipeline Seettings:
+3.  (option) Force triggered pipeline execution<BR>If you don't want to manage build trigger from azure-pipelines.yml (see [Azure DevOps Continuous integration triggers](https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml#ci-triggers)), you can force it using Pipeline Settings:
 - Go to **Pipelines** menu, edit the pipeline, then **More options** button and select **Triggers**.
 - In **Continuous Integration** section, check **Override the YAML continuous integration trigger from here** and **Enable continuous integration**
 
@@ -174,7 +174,7 @@ Use the azure DeveOps UI to monitor your pipeline execution and read test report
 
 ![Running Steps](./images/running-steps.png)
 
-- And the end of the build, you see execution status and link to artifacts generated ("2 published")
+- When the build is over, click on the top-left arrow. Then, you see execution status and link to artifacts generated ("2 published")
 
 ![Job Summary](./images/ended-job.png)
 
