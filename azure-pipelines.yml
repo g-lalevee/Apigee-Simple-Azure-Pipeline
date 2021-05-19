@@ -34,15 +34,15 @@ variables:
 
 steps:
 
-# Define Apigee organization and environmnet from Git Branch
+# Set Deployment Target: Define Apigee organization and environmnet from Git Branch
 - bash: |
     echo $COMMIT_BRANCH is commited
-    if [ $COMMIT_BRANCH == "prod" ]; then
+    if [ $COMMIT_BRANCH == "refs/heads/prod" ]; then
       # Prod branch --> Apigee prod environment 
       echo "##vso[task.setvariable variable=APIGEE_ORG]$DEFAULT_APIGEE_ORG"
       echo "##vso[task.setvariable variable=APIGEE_ENV]prod"
     else
-      # all ohers branches --> defualt environment
+      # all ohers branches --> default environment
       echo "##vso[task.setvariable variable=APIGEE_ORG]$DEFAULT_APIGEE_ORG"
       echo "##vso[task.setvariable variable=APIGEE_ENV]$DEFAULT_APIGEE_ENV"
     fi
