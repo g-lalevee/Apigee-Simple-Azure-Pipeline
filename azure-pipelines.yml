@@ -58,12 +58,6 @@ steps:
   enabled: "true"
   displayName: runApigeeLint
 
-- task: PublishTestResults@2
-  displayName: publishApigeelintResults
-  enabled: "false"
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/*-output.xml'
 
 # run ESlint, javascript linter
 - bash: |
@@ -73,13 +67,8 @@ steps:
   enabled: "true"
   displayName: runESlint
 
-- task: PublishTestResults@2
-  displayName: publishESlintResults
-  enabled: "false"
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/*-output.xml'
 
+# Publish static code analysis folder result
 - task: PublishBuildArtifacts@1
   displayName: publishStaticCodeTestsResults
   enabled: "true"
@@ -88,11 +77,10 @@ steps:
     artifactName: static-code-analysis
 
 
-
 # Configure EdgeeConfig/edge.json file: update target environment name
 - bash: |
     sed -i "s/target_apigee_env/$(APIGEE_ENV)/g" ./EdgeConfig/edge.json
-  enabled: "false"
+  enabled: "true"
   displayName: Update edge.json
 
 # Generate GCP Service Account file from Azure Pipeline variable GCP_SERVICE_ACCCOUNT
@@ -194,35 +182,26 @@ steps:
     publishJUnitResults: true
     goals: "apigee-enterprise:deploy -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dsa=sa.json" 
     
+
 # run Apickli, API test integration
 - bash: |
     echo "run Apickli"
     mkdir integration_output
     export NODE_TLS_REJECT_UNAUTHORIZED="0"
     sed -i "s/organization_hostname/$TEST_HOST/g" ./test/integration/features/support/init.js
-    echo "run cucumber"
     node ./node_modules/cucumber/bin/cucumber-js ./test/integration --format json:report.json
-    echo "run json format"
     node ./test/integration/index.js
-    echo "run copy"
     cp ./cucumber_report.html integration_output/apickli_report.html 
-  # cat report.json | node_modules/cucumber-junit/bin/cucumber-junit  > apickli-output.xml 
   displayName: runApickli
   enabled: "true"
 
+
+# Publish integration test folder result
 - task: PublishBuildArtifacts@1
   displayName: publishInteegrationTestsResults
   enabled: "true"
   inputs:
     pathToPublish: integration_output
     artifactName: integration-tests
-
-  # publish Apigeelint JUnit result (option)
-- task: PublishTestResults@2
-  displayName: publishApickliResults
-  enabled: "false"
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/*-output.xml'
 
 
