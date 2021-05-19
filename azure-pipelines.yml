@@ -31,10 +31,10 @@ variables:
   # GCP_SERVICE_ACCCOUNT, APIGEE_USER & APIGEE_PASSWORD are stored in Azure Pipeline variable settings
   
 
+
 steps:
 
-
-# Main branch for Apigee test environment
+# Define Apigee organization and environmnet from Git Branch
 - bash: |
     if [ $COMMIT_BRANCH == "main" ]; then
       # Prod branch --> Apigee prod environment 
@@ -99,7 +99,7 @@ steps:
 # Configure EdgeeConfig/edge.json file: update target environment name
 - bash: |
     sed -i "s/target_apigee_env/$(APIGEE_ENV)/g" ./EdgeConfig/edge.json
-  enabled: "false"
+  enabled: "true"
   displayName: Update edge.json
 
 # Generate GCP Service Account file from Azure Pipeline variable GCP_SERVICE_ACCCOUNT
