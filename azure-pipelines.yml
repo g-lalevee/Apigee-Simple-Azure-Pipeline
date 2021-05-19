@@ -127,7 +127,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "install -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dapigee.username=$(APIGEE_CREDS_USR) -Dapigee.password=$(APIGEE_CREDS_PSW) -Dapigee.config.file=EdgeConfig/edge.json -Dapigee.config.options=update"
+    goals: "install -P$(API_VERSION) -Dapigee.org=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dapigee.username=$(APIGEE_USER) -Dapigee.password=$(APIGEE_PASSWORD) -Dapigee.config.file=EdgeConfig/edge.json -Dapigee.config.options=update"
   env:  
       APIGEE_PASS: $(APIGEE_PASS)
         
@@ -187,7 +187,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
-    goals: "apigee-enterprise:deploy -P$(API_VERSION) -Dorg=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dpassword=$(APIGEE_CREDS_PSW) -Dusername=$(APIGEE_CREDS_USR)" 
+    goals: "apigee-enterprise:deploy -P$(API_VERSION) -Dorg=$(APIGEE_ORG) -Denv=$(APIGEE_ENV) -Dpassword=$(APIGEE_PASSWORD) -Dusername=$(APIGEE_USER)" 
   env:
     APIGEE_PASS: $(APIGEE_PASS)
 

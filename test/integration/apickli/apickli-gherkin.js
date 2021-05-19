@@ -16,6 +16,7 @@ const prettyPrintJson = function(json) {
   return prettyJson.render(output, {
     noColor: true,
   });
+  
 };
 
 const callbackWithAssertion = function(callback, assertion) {
