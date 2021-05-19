@@ -33,7 +33,7 @@ The CICD pipeline includes:
 
 The folder [./apiproxy](./apiproxy) includes a simple API proxy bundle, a simple Apigee configuration file [./EdgeConfig/edge.json](./EdgeConfig/edge.json) as well as the following resources:
 
-- [.azure-pipelines File](./.azure-pipelines.yml) to define an Azure DevOps
+- [azure-pipelines File](./azure-pipelines.yml) to define an Azure DevOps
   multi-branch pipeline.
 - [test Folder](./test) to hold the unit and integration
   tests.
@@ -76,7 +76,7 @@ SA_NAME=<your-new-service-account-name>
 gcloud iam service-accounts create $SA_NAME --display-name="Azure-ci Service Account"
 
 PROJECT_ID=$(gcloud config get-value project)
-GITLAB_SA=$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com
+AZURE=$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com
 
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:$AZURE_SA" \
@@ -92,10 +92,12 @@ gcloud iam service-accounts keys create $SA_NAME-key.json --iam-account=$AZURE_S
 
 Copy `<your-new-service-account-name>-key.json` file content to clipboard. 
 
+Note: you can update and run [generate-SA.sh](./generate-SA.sh) file to create your GCP service account.
+
+
 ### Initialize a GitHub Repository
 
-To use the `Apigee-Simple-Azure-Pipeline`
-in a **GitHub** repository `github.com/my-user/my-api-proxy-repo` follow these
+To clone the `Apigee-Simple-Azure-Pipeline` in your GitHub repository `github.com/my-user/my-api-proxy-repo`, follow these
 steps:
 
 ```bash
@@ -112,36 +114,36 @@ git push -u origin feature/cicd-pipeline
 
 ### Azure Pipeline Configuration 
 
-1.  Create a pipeline
-In your [Azure DevOps account](https://dev.azure.com), create a new project. From the **Pipelines** menu, select **Pipeeline** and select **GitHub**, then your cloned repository as source repository. Terminate your pipeline configuration and save it.<BR>
+1.  Create a pipeline<BR>
+In your [Azure DevOps account](https://dev.azure.com), create a new project. From the **Pipelines** menu, select **Pipeline** and select **GitHub**, then select your cloned repository as source repository. Terminate your pipeline configuration and save it.<BR>
 Next step will be to add Apigee credentials to your pipeline. 
 
 
 > If the target is Apigee Edge...
 
-2.  Add custom environment variables `APIGEE_USER` and `APIGEE_PASSWORD`, to store your Apigee User ID and password:
-- Go to **Pipelines** menu, edit the pipeline, then **Variables** button to add variables..
+2.  Add pipeline variables `APIGEE_USER` and `APIGEE_PASSWORD`, to store your Apigee User ID and password:
+- Go to **Pipelines** menu, edit the pipeline, then **Variables** button to add variables.
 - Click the **+** button.<BR>In the New variable modal, fill in the details:
   - Name: APIGEE_USER
   - Value: your Apigee user ID 
   - Click the **OK** button
 - Click again the **+** button.<BR>In the New variable modal, fill in the details:
-  - Key: APIGEE_PASSWORD
+  - Name: APIGEE_PASSWORD
   - Value: your Apigee user ID password
   - Keep this value secret: checked
   - Click the **OK** button
 
 > If the target is Apigee X / Apigee hybrid
 
-2.  Add custom environment variable `GCP_SERVICE_ACCOUNT`, to store your GCP Service Account json key:
-- Go to **Pipelines** menu, edit the pipeline, then **Variables** button to add variables..
+2.  Add pipeline variable `GCP_SERVICE_ACCOUNT`, to store your GCP Service Account json key:
+- Go to **Pipelines** menu, edit the pipeline, then **Variables** button to add variables.
 - Click the **+** button.<BR>In the New variable modal, fill in the details:
   - Key: GCP_SERVICE_ACCCOUNT
   - Value: paste clipboard (containing GCP SA JSON key copied before)
   - Keep this value secret: checked
   - Click the **OK** button
 
-3.  (option) Force triggered pipeline execution
+3.  (option) Force triggered pipeline execution<BR>If you don't want to manage execution trigger from azure-pipelines.yml (see [Azure DevOps Continuous integration (CI) triggers](https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml#ci-triggers)), you can force it using Pipeline Seettings:
 - Go to **Pipelines** menu, edit the pipeline, then **More options** button and select **Triggers**.
 - In **Continuous Integration** section, check **Override the YAML continuous integration trigger from here** and **Enable continuous integration**
 
