@@ -13,39 +13,58 @@ pool:
 
 variables:
 
-  #API_VERSION: "googleapi" 
+  #API_VERSION: "apigeeapi" 
   # or 
   API_VERSION: "googleapi"
 
-  APIGEE_USER_ENV: $(APIGEE_USER)
-  APIGEE_ENV: "default-dev"
-  APIGEE_ORG: "bap-emea-apigee-5"
+  DEFAULT_APIGEE_ENV: "default-dev"
+  DEFAULT_APIGEE_ORG: "bap-emea-apigee-5"
+ 
+  TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
+  #TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
+  #34.117.38.184.nip.io
 
   AUTHOR_EMAIL: $(APIGEE_USER)
   COMMIT_ID: $(Build.SourceVersion)
   COMMIT_BRANCH: $(Build.SourceBranch)
 
-  #TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
-  TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
-  #34.117.38.184.nip.io
-
-  # GCP_SERVICE_ACCCOUNT, APIGEE_CREDS_USR & APIGEE_CREDS_PSW are stored in Azure Pipeline variable settings
+  # GCP_SERVICE_ACCCOUNT, APIGEE_USER & APIGEE_PASSWORD are stored in Azure Pipeline variable settings
   
 
 steps:
-    
+
+
+# Main branch for Apigee test environment
+- bash: |
+    if [ $COMMIT_BRANCH == "main" ]; then
+      # Prod branch --> Apigee prod environment 
+      echo "##vso[task.setvariable variable=APIGEE_ORG]$DEFAULT_APIGEE_ORG"
+      echo "##vso[task.setvariable variable=APIGEE_ENV]prod"
+
+    else
+      # all ohers branches --> defualt environment
+      echo "##vso[task.setvariable variable=APIGEE_ORG]$DEFAULT_APIGEE_ORG"
+      echo "##vso[task.setvariable variable=APIGEE_ENV]$DEFAULT_APIGEE_ENV"
+    fi
+  enabled: "true"
+  displayName: Set Deployment Target
+  env:  
+    DEFAULT_APIGEE_ORG: $(c_APIGEE_ORG)
+    DEFAULT_APIGEE_ENV: $(DEFAULT_APIGEE_ENV)
+
+
 # install node.js tools and dependencies
 - task: NodeTool@0
   inputs:
     versionSpec: '12.x'
-  enabled: "true"
+  enabled: "false"
     
 - task: Npm@1
   inputs:
     command: 'install'
     workingDir: '.'
   displayName: npmInstalls
-  enabled: "true"
+  enabled: "false"
 
 
 # run Apigeelint, API proxy linter
@@ -55,7 +74,7 @@ steps:
     mkdir test_output
     ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f html.js  > test_output/apigeelint-output.html
     cat test_output/apigeelint-output.html
-  enabled: "true"
+  enabled: "false"
   displayName: runApigeeLint
 
 
@@ -64,14 +83,14 @@ steps:
     echo "run Eslint"
     ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > test_output/eslint-out.html
     cat test_output/eslint-out.html
-  enabled: "true"
+  enabled: "false"
   displayName: runESlint
 
 
 # Publish static code analysis folder result
 - task: PublishBuildArtifacts@1
   displayName: publishStaticCodeTestsResults
-  enabled: "true"
+  enabled: "false"
   inputs:
     pathToPublish: test_output
     artifactName: static-code-analysis
@@ -80,24 +99,25 @@ steps:
 # Configure EdgeeConfig/edge.json file: update target environment name
 - bash: |
     sed -i "s/target_apigee_env/$(APIGEE_ENV)/g" ./EdgeConfig/edge.json
-  enabled: "true"
+  enabled: "false"
   displayName: Update edge.json
 
 # Generate GCP Service Account file from Azure Pipeline variable GCP_SERVICE_ACCCOUNT
 # if deploy to Apigee X/hybrid
 - bash: |
     echo '$(GCP_SERVICE_ACCCOUNT)' > sa.json
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'googleapi')
   displayName: Generate SA Key file 
   env:  
     GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
 
 
+
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee edge
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: './pom.xml'
@@ -113,7 +133,7 @@ steps:
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: './pom.xml'
@@ -127,7 +147,7 @@ steps:
 # Maven Config Env.
 - task: Maven@3
   displayName: mvnProcessResources
-  enabled: "true"
+  enabled: "false"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -141,7 +161,7 @@ steps:
 # Maven Package proxy bundle
 - task: Maven@3
   displayName: mvnApigeeConfigure
-  enabled: "true"
+  enabled: "false"
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -155,7 +175,7 @@ steps:
 # Maven Deploy proxy bundle: Apigee Edge
 - task: Maven@3
   displayName: mvnApigeeDeployApigee
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'apigeeapi')
   inputs:
     mavenPomFile: 'pom.xml'
@@ -171,7 +191,7 @@ steps:
 # Maven Deploy proxy bundle: Apigee X/hybrid
 - task: Maven@3
   displayName: mvnApigeeDeployGoogle
-  enabled: "true"
+  enabled: "false"
   condition:  eq(variables.API_VERSION, 'googleapi')
   inputs:
     mavenPomFile: 'pom.xml'
@@ -193,13 +213,13 @@ steps:
     node ./test/integration/index.js
     cp ./cucumber_report.html integration_output/apickli_report.html 
   displayName: runApickli
-  enabled: "true"
+  enabled: "false"
 
 
 # Publish integration test folder result
 - task: PublishBuildArtifacts@1
   displayName: publishInteegrationTestsResults
-  enabled: "true"
+  enabled: "false"
   inputs:
     pathToPublish: integration_output
     artifactName: integration-tests
