@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SA_NAME=azure-pipeline-pipeline
 
 gcloud iam service-accounts create $SA_NAME --display-name="Azure Pipeline Service Account"

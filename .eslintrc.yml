@@ -26,3 +26,4 @@ extends:
   - google
   - prettier
 root: true
+

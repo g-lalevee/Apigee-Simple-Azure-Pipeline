@@ -13,17 +13,17 @@ pool:
 
 variables:
 
-  API_VERSION: "apigeeapi" 
+  #API_VERSION: "apigeeapi" 
   # or 
-  #API_VERSION: "googleapi"
+  API_VERSION: "googleapi"
 
-  DEFAULT_APIGEE_ENV: "test"
-  DEFAULT_APIGEE_ORG: "emea-demo7"
+  DEFAULT_APIGEE_ENV: "default-dev"
+  DEFAULT_APIGEE_ORG: "bap-emea-apigee-5"
  
-  #TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
-  TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
+  TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
   #34.117.38.184.nip.io
-
+  #TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
+    
   AUTHOR_EMAIL: $(APIGEE_USER)
   COMMIT_ID: $(Build.SourceVersion)
   COMMIT_BRANCH: $(Build.SourceBranch)
