@@ -17,10 +17,10 @@ variables:
   # or 
   API_VERSION: "googleapi"
 
-  DEFAULT_APIGEE_ENV: "default-dev"
-  DEFAULT_APIGEE_ORG: "bap-emea-apigee-5"
+  DEFAULT_APIGEE_ENV: "xxx"
+  DEFAULT_APIGEE_ORG: "yyy"
  
-  TEST_HOST: bap-emea-apigee-5-dev.lalevee.org
+  TEST_HOST: api.example.com
   #TEST_HOST: "$(APIGEE_ORG)-$(APIGEE_ENV).apigee.net"
 
   AUTHOR_EMAIL: $(APIGEE_USER)
