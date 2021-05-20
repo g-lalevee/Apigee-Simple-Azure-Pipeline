@@ -166,7 +166,7 @@ Use the Azure DeveOps UI to monitor your pipeline execution and read test report
 
 ![Running Builds](./images/running-build.png)
 
-- The summary page displays build build summary and status. Click on running **Job**
+- The summary page displays builds summary and status. Click on running **Job**
 
 ![Running job](./images/running-job.png)
 

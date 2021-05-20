@@ -71,9 +71,9 @@ steps:
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
 - bash: |
     echo "run Apigeelint" 
-    mkdir test_output
-    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f html.js  > test_output/apigeelint-output.html
-    cat test_output/apigeelint-output.html
+    mkdir code_test_output
+    ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f html.js  > code_test_output/apigeelint-output.html
+    cat code_test_output/apigeelint-output.html
   enabled: "true"
   displayName: runApigeeLint
 
@@ -81,8 +81,8 @@ steps:
 # run ESlint, javascript linter
 - bash: |
     echo "run Eslint"
-    ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > test_output/eslint-out.html
-    cat test_output/eslint-out.html
+    ./node_modules/eslint/bin/eslint.js -c ./.eslintrc-jsc.yml --format html ./apiproxy/resources/jsc > code_test_output/eslint-out.html
+    cat code_test_output/eslint-out.html
   enabled: "true"
   displayName: runESlint
 
@@ -92,8 +92,27 @@ steps:
   displayName: publishStaticCodeTestsResults
   enabled: "true"
   inputs:
-    pathToPublish: test_output
+    pathToPublish: code_test_output
     artifactName: static-code-analysis
+
+# run Mocha, JavaScript unit test 
+- bash: |
+    echo "run Mocha"
+    mkdir unit_test_output
+    ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha ./test/unit
+    cat ./coverage/index.html
+    cp ./coverage/index.html ./unit_test_output/mocha.html
+  enabled: "true"
+  displayName: runMocha
+
+
+# Publish unit test folder result
+- task: PublishBuildArtifacts@1
+  displayName: publishUnitTestsResults
+  enabled: "true"
+  inputs:
+    pathToPublish: unit_test_output
+    artifactName: unit-tests
 
 
 # Configure EdgeeConfig/edge.json file: update target environment name
