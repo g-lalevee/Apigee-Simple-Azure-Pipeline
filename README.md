@@ -178,11 +178,11 @@ Use the Azure DeveOps UI to monitor your pipeline execution and read test report
 
 ![Job Summary](./images/ended-job.png)
 
-- Click on artifact link, to access artifact folders and list
+- Click on artifact link, to access artifact folders and list. 
 
 ![Artifact List](./images/artifact-list.png)
 
-- Click on artifact, to download it. Open file with your browser. For example, Apickli report:
+- Click on artifact, to download it (you can also click on **More Options** menu to download a zipped folder). Open file with your browser. For example, Apickli report:
 
 ![Apicli Report](./images/apickli-report.png)
 

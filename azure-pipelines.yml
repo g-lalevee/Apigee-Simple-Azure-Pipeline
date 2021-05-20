@@ -87,7 +87,7 @@ steps:
   displayName: runESlint
 
 
-# Publish static code analysis folder result
+# Publish static code analysis folder results
 - task: PublishBuildArtifacts@1
   displayName: publishStaticCodeTestsResults
   enabled: "true"
@@ -100,13 +100,12 @@ steps:
     echo "run Mocha"
     mkdir unit_test_output
     ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=html ./node_modules/mocha/bin/_mocha ./test/unit
-    tar -zcvf mocha.tar.gz coverage
-    cp mocha.tar.gz ./unit_test_output/
+    cp ./coverage/* ./unit_test_output
   enabled: "true"
   displayName: runMocha
 
 
-# Publish unit test folder result
+# Publish unit test folder results
 - task: PublishBuildArtifacts@1
   displayName: publishUnitTestsResults
   enabled: "true"
