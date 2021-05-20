@@ -100,7 +100,8 @@ steps:
     echo "run Mocha"
     mkdir unit_test_output
     ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=html ./node_modules/mocha/bin/_mocha ./test/unit
-    cp ./coverage/* ./unit_test_output/
+    tar -zcvf mocha.tar.gz coverage
+    cp mocha.tar.gz ./unit_test_output/
   enabled: "true"
   displayName: runMocha
 
