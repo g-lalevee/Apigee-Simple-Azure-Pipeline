@@ -100,10 +100,7 @@ steps:
     echo "run Mocha"
     mkdir unit_test_output
     ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=html ./node_modules/mocha/bin/_mocha ./test/unit
-    echo "result"
-    ls ./coverage
-    cat ./coverage/index.html
-    cp ./coverage/index.html ./unit_test_output/mocha.html
+    cp ./coverage/* ./unit_test_output/*
   enabled: "true"
   displayName: runMocha
 
