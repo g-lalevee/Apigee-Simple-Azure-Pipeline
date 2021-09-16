@@ -186,4 +186,4 @@ Use the Azure DeveOps UI to monitor your pipeline execution and read test report
 
 ![Apicli Report](./images/apickli-report.png)
 
-# weatherChannel
+
