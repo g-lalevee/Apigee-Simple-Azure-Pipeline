@@ -49,7 +49,7 @@ steps:
   enabled: "true"
   displayName: Set Deployment Target
   env:  
-    DEFAULT_APIGEE_ORG: $(c_APIGEE_ORG)
+    DEFAULT_APIGEE_ORG: $(DEFAULT_APIGEE_ORG)
     DEFAULT_APIGEE_ENV: $(DEFAULT_APIGEE_ENV)
     COMMIT_BRANCH: $(COMMIT_BRANCH)
 
