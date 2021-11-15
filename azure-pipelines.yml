@@ -28,7 +28,7 @@ variables:
   COMMIT_ID: $(Build.SourceVersion)
   COMMIT_BRANCH: $(Build.SourceBranch)
 
-  # GCP_SERVICE_ACCCOUNT, APIGEE_USER & APIGEE_PASSWORD are stored in Azure Pipeline variable settings
+  # GCP_SERVICE_ACCOUNT, APIGEE_USER & APIGEE_PASSWORD are stored in Azure Pipeline variable settings
   
 
 
@@ -122,16 +122,15 @@ steps:
   displayName: Update edge.json
 
 
-# Generate GCP Service Account file from Azure Pipeline variable GCP_SERVICE_ACCCOUNT
+# Generate GCP Service Account file from Azure Pipeline variable GCP_SERVICE_ACCOUNT
 # if deploy to Apigee X/hybrid
 - bash: |
-    echo '$(GCP_SERVICE_ACCCOUNT)' > sa.json
-    cat sa.json
+    echo '$(GCP_SERVICE_ACCOUNT)' > sa.json
   enabled: "true"
   condition:  eq(variables.API_VERSION, 'googleapi')
   displayName: Generate SA Key file 
   env:  
-    GCP_SERVICE_ACCCOUNT: $(GCP_SERVICE_ACCCOUNT)
+    GCP_SERVICE_ACCOUNT: $(GCP_SERVICE_ACCOUNT)
 
 
 # Maven Deploy Apigee Configuration (from EdgeeConfig/edge.json): Apigee edge

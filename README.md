@@ -138,7 +138,7 @@ Next step will be to add Apigee credentials to your pipeline.
 2.  Add pipeline variable `GCP_SERVICE_ACCOUNT`, to store your GCP Service Account json key:
 - Go to **Pipelines** menu, edit the pipeline, then **Variables** button to add variables.
 - Click the **+** button.<BR>In the New variable modal, fill in the details:
-  - Key: GCP_SERVICE_ACCCOUNT
+  - Key: GCP_SERVICE_ACCOUNT
   - Value: paste clipboard (containing GCP SA JSON key copied before)
   - Keep this value secret: checked
   - Click the **OK** button
