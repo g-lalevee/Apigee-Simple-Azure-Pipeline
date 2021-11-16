@@ -237,6 +237,7 @@ steps:
   displayName: runApickli
   enabled: "true"
 
+  
 
 # Publish integration test folder result
 - task: PublishBuildArtifacts@1
