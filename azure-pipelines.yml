@@ -238,7 +238,6 @@ steps:
     cp ./cucumber_report.html integration_output/apickli_report.html 
   displayName: runApickli
   enabled: "true"
-
   
 
 # Publish integration test folder result
