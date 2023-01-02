@@ -17,7 +17,7 @@ variables:
   # or 
   API_VERSION: "googleapi"
   
-  
+
 
   DEFAULT_APIGEE_ENV: "default-dev"
   DEFAULT_APIGEE_ORG: "bap-emea-apigee-5"
@@ -129,7 +129,7 @@ steps:
 - bash: |
     echo '$(GCP_SERVICE_ACCOUNT)' > sa.json
   enabled: "true"
-  condition:  eq(variables.API_VERSION, 'googleapi')
+  condition:  and(succeeded(), eq(variables.API_VERSION, 'googleapi'))
   displayName: Generate SA Key file 
   env:  
     GCP_SERVICE_ACCOUNT: $(GCP_SERVICE_ACCOUNT)
@@ -139,7 +139,7 @@ steps:
 - task: Maven@3
   displayName: mvnApigeeConfigurationApigee
   enabled: "true"
-  condition:  eq(variables.API_VERSION, 'apigeeapi')
+  condition:  and(succeeded(), eq(variables.API_VERSION, 'apigeeapi'))
   inputs:
     mavenPomFile: './pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -156,7 +156,7 @@ steps:
 - task: Maven@3
   displayName: mvnApigeeConfigurationGoogle
   enabled: "true"
-  condition:  eq(variables.API_VERSION, 'googleapi')
+  condition:  and(succeeded(), eq(variables.API_VERSION, 'googleapi'))
   inputs:
     mavenPomFile: './pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -199,7 +199,7 @@ steps:
 - task: Maven@3
   displayName: mvnApigeeDeployApigee
   enabled: "true"
-  condition:  eq(variables.API_VERSION, 'apigeeapi')
+  condition:  and(succeeded(), eq(variables.API_VERSION, 'apigeeapi'))
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -216,7 +216,7 @@ steps:
 - task: Maven@3
   displayName: mvnApigeeDeployGoogle
   enabled: "true"
-  condition:  eq(variables.API_VERSION, 'googleapi')
+  condition:  and(succeeded(), eq(variables.API_VERSION, 'googleapi'))
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
