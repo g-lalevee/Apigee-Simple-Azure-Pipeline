@@ -20,7 +20,7 @@
         "apickli": "latest",
         "apigeelint": "^0.4.8",
         "cucumber": "^6.0.5",
-        "cucumber-html-reporter": "latest",
+        "cucumber-html-reporter": "5.5.0",
         "eslint": "^7.0.0",
         "eslint-config-google": "^0.14.0",
         "eslint-config-prettier": "^6.11.0",
