@@ -15,6 +15,7 @@ The CICD pipeline includes:
 
 - Git branch dependent Apigee environment selection and proxy naming to allow
   deployment of feature branches as separate proxies in the same environment
+- Open API Specification (Swagger) static code analysis using [stoplight spectral](https://github.com/stoplightio/spectral)
 - Static Apigee Proxy code analysis using [apigeelint](https://github.com/apigee/apigeelint)
 - Static JS code analysis using [eslint](https://eslint.org/)
 - Unit JS testing using [mocha](https://mochajs.org/)
@@ -35,8 +36,8 @@ The folder [./apiproxy](./apiproxy) includes a simple API proxy bundle, a simple
 
 - [azure-pipelines File](./azure-pipelines.yml) to define an Azure DevOps
   multi-branch pipeline.
-- [test Folder](./test) to hold the unit and integration
-  tests.
+- [specs Folder](./specs) to hold the specification file for provided proxy.
+- [test Folder](./test) to hold the specification (owasp ruleset), unit and integration tests.
 
 
 ## Target Audience
