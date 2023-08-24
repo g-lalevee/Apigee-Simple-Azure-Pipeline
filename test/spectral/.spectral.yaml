@@ -1,0 +1,4 @@
+formats:
+  - oas2
+extends:
+  - 'https://cdn.jsdelivr.net/npm/@stoplight/spectral-owasp-ruleset@1.4.3/dist/ruleset.min.js'

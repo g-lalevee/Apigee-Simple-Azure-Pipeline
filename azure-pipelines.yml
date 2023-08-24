@@ -70,17 +70,30 @@ steps:
   enabled: "true"
 
 
+# Validate Specification file (OAS, Swagger) using Stoplight Spectral
+# + upload artifact (spectral-report.html)
+- bash: |
+    echo "run Stoplight Spectral" 
+    mkdir OAS_test_output
+    ./node_modules/.bin/spectral lint -r ./test/spectral/.spectral.yaml -f html -o ./OAS_test_output/spectral-report.html ./specs/airport-1.0.0.yaml  || true  # catch all errors for demo purpose 
+
+# Publish Spectral scan folder results
+- task: PublishBuildArtifacts@1
+  displayName: publishStaticCodeTestsResults
+  enabled: "true"
+  inputs:
+    pathToPublish: OAS_test_output
+    artifactName: OAS_test
+
+
 # run Apigeelint, API proxy linter
 # generate result output in Junit because Azure task PublishTestResults doesn't (yet) support html
 - bash: |
     echo "run Apigeelint" 
     mkdir code_test_output
     ./node_modules/apigeelint/cli.js -s apiproxy/ -e PO013 -f html.js  > code_test_output/apigeelint-output.html
-    cat code_test_output/apigeelint-output.html
   enabled: "true"
   displayName: runApigeeLint
-
-
 
 # run ESlint, javascript linter
 - bash: |
@@ -89,7 +102,6 @@ steps:
     cat code_test_output/eslint-out.html
   enabled: "true"
   displayName: runESlint
-
 
 # Publish static code analysis folder results
 - task: PublishBuildArtifacts@1
