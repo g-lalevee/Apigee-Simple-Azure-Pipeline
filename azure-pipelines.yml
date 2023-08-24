@@ -76,6 +76,8 @@ steps:
     echo "run Stoplight Spectral" 
     mkdir OAS_test_output
     ./node_modules/.bin/spectral lint -r ./test/spectral/.spectral.yaml -f html -o ./OAS_test_output/spectral-report.html ./specs/airport-1.0.0.yaml  || true  # catch all errors for demo purpose 
+  enabled: "true"
+  displayName: runSpectralScan
 
 # Publish Spectral scan folder results
 - task: PublishBuildArtifacts@1
