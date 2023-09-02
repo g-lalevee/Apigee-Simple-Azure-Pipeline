@@ -77,7 +77,7 @@ SA_NAME=<your-new-service-account-name>
 gcloud iam service-accounts create $SA_NAME --display-name="Azure-ci Service Account"
 
 PROJECT_ID=$(gcloud config get-value project)
-AZURE=$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com
+AZURE_SA=$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com
 
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:$AZURE_SA" \
