@@ -32,8 +32,6 @@ variables:
   # GCP_SERVICE_ACCOUNT, APIGEE_USER & APIGEE_PASSWORD are stored in Azure Pipeline variable settings
   
 
-
-
 steps:
 
 # Set Deployment Target: Define Apigee organization and environmnet from Git Branch
