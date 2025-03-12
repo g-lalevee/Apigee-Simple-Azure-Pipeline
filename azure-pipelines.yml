@@ -17,8 +17,6 @@ variables:
   # or 
   API_VERSION: "googleapi"
   
-
-
   DEFAULT_APIGEE_ENV: "default-dev"
   DEFAULT_APIGEE_ORG: "bap-emea-apigee-5"
  
